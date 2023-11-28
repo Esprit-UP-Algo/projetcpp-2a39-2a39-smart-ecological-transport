@@ -1,9 +1,9 @@
-QT       += core gui
-QT       += core gui printsupport network widgets multimediawidgets axcontainer
+
+QT       += core gui printsupport network widgets multimediawidgets axcontainer serialport
 QT+=sql
-QT       += printsupport
+
 QT       +=charts
-QT +=serialport
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++11
@@ -23,12 +23,16 @@ SOURCES += \
     connection.cpp \
     dechets.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    smtp.cpp \
+    arduino.cpp
 
 HEADERS += \
     connection.h \
     dechets.h \
-    mainwindow.h
+    mainwindow.h \
+    smtp.h \
+    arduino.h
 
 FORMS += \
     mainwindow.ui
@@ -37,3 +41,8 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+win32: LIBS += -L"C:/Users/Administrateur/Documents/smart" -llibeay32 -lssleay32
+
+DISTFILES += \
+    libeay32.dll \
+    ssleay32.dll

@@ -1,19 +1,17 @@
 git status
 
-////// initialization/////
+/////////// initialization////////////
 git init
 git config --global user.name "mouradhriz2003"
 git config --global user.email "mourad.hriz0@gmail.com"
 git remote add origin https://github.com/mouradhriz2003/projet-C-.git
-//////////////////////////
+//////////////////////////////////////
 
-//////updates/////////////
+///////////changer la branche/////////
+git checkout -b <nom_de_branche>
+
+/////////////updates/////////////////
 git add .
 git commit -m "added interface"
-git push origin mourad
-//////////////////////////
-
-settings -> collaborators -> add collaborator
-
-//////changer la branche//
-git checkout -b <nom_de_branche>
+git push origin GestionDechets
+/////////////////////////////////////
