@@ -8,12 +8,12 @@
 class collect
 {
 private:
-    QString id_c,empp,qua,  quantit;
+    QString id_c,empp,qua,  quantit,rfid;
     QDate  date_po;
 
 public:
     collect(){}//constructeur:yaamel initialisation fi 0
-    collect(QString,QString,QString,QString,QDate);//constructeure paremetri
+    collect(QString,QString,QString,QString,QDate,QString);//constructeure paremetri
 
 
     QString  getid_c();
@@ -21,12 +21,15 @@ public:
     QString  getemp();
     QString  getqua();
     QDate  getdate_po();
+    QString getrfid();
+
 
     void setid_c(QString);
     void setquantit(QString);
     void setempp(QString);
     void setqua(QString);
     void setdate_po(QDate);
+    void setrfid(QString);
 
 
     bool ajouter();

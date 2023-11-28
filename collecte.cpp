@@ -9,9 +9,9 @@
 
 
 
-collect::collect ( QString id_c, QString empp,QString  quantit,QString qua,QDate date_po)
+collect::collect ( QString id_c, QString empp,QString  quantit,QString qua,QDate date_po,QString rfid)
 {
-    this->id_c=id_c;this->empp=empp ;this->quantit=quantit ; this->qua=qua ;this->date_po=date_po ;
+    this->id_c=id_c;this->empp=empp ;this->quantit=quantit ; this->qua=qua ;this->date_po=date_po ; this->rfid=rfid;
 }
 
 QString collect:: getid_c(){return id_c ;}
@@ -19,12 +19,14 @@ QString  collect::getemp(){return empp ;}
 QString  collect::getquantit(){return quantit ;}
 QString  collect::getqua(){return qua ;}
 QDate  collect::getdate_po(){return date_po;}
+QString  collect::getrfid(){return rfid;}
 
 void collect::setid_c(QString id_c){this->id_c=id_c;}
 void collect::setempp(QString empp){this->empp=empp;}
 void collect::setquantit(QString quantit){this->quantit=quantit;}
 void collect::setqua(QString qua){this->qua=qua;}
 void collect::setdate_po(QDate date_po){this->date_po=date_po;}
+void collect::setrfid(QString rfid){this->rfid=rfid;}
 
 
 

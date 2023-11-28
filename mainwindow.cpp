@@ -92,6 +92,7 @@ void MainWindow::on_pb_ajouter_clicked()
     QString quantit = ui->qan_2->text();
     QString qua = ui->qual_2->text();
     QDate date_po = ui->le_date->date();
+    QString rfid=ui->rfid->text();
 
 
     if(id_c.length()==0)
@@ -114,7 +115,7 @@ void MainWindow::on_pb_ajouter_clicked()
     }
 
 
-    collect c(id_c,empp,quantit,qua,date_po);
+    collect c(id_c,empp,quantit,qua,date_po,rfid);
     if (ui->rfid->text()!=""){
 
     bool test=c.ajouter();
@@ -129,7 +130,7 @@ void MainWindow::on_pb_ajouter_clicked()
                                              QObject::tr(""
                                                          "collecte Ajouter."), QMessageBox::Ok);
         QSqlQuery query;
-          query.prepare("INSERT INTO rfid (rfid, time) "
+          query.prepare("INSERT INTO COLLECTE (rfid, time) "
                               "VALUES (:rfid, :time)");
               query.bindValue(0, test12.left(test12.length()-2));
               query.bindValue(1, QDateTime::currentDateTime());
@@ -169,7 +170,7 @@ void MainWindow::on_le_id_c_supp_clicked()
              ui->t_c2->setModel(Etmp.afficher());
 
              QSqlQuery query;
-               query.prepare("INSERT INTO rfid (rfid, time) "
+               query.prepare("INSERT INTO COLLECTE (rfid, time) "
                                    "VALUES (:rfid, :time)");
                    query.bindValue(0, test12.left(test12.length()-2));
                    query.bindValue(1, QDateTime::currentDateTime());
@@ -271,7 +272,7 @@ void MainWindow::on_pushButton_update_clicked()
         qDebug() << "Collecte modifiée avec succès.";
         QMessageBox::information(this, "Succès", "Collecte modifiée avec succès.");
         QSqlQuery query;
-          query.prepare("INSERT INTO rfid (rfid, time) "
+          query.prepare("INSERT INTO COLLECTE (rfid, time) "
                               "VALUES (:rfid, :time)");
               query.bindValue(0, test12.left(test12.length()-2));
               query.bindValue(1, QDateTime::currentDateTime());
