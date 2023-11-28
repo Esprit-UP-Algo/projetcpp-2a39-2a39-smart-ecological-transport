@@ -31,10 +31,10 @@ int Arduino::connect_arduino()
         if(arduino_is_available){ // configuration de la communication ( débit...)
             serial->setPortName(arduino_port_name);
             if(serial->open(QSerialPort::ReadWrite)){
-                serial->setBaudRate(QSerialPort::Baud9600); // débit : 9600 bits/s
-                serial->setDataBits(QSerialPort::Data8); //Longueur des données : 8 bits,
-                serial->setParity(QSerialPort::NoParity); //1 bit de parité optionnel
-                serial->setStopBits(QSerialPort::OneStop); //Nombre de bits de stop : 1
+                serial->setBaudRate(QSerialPort::Baud9600);
+                serial->setDataBits(QSerialPort::Data8);
+                serial->setParity(QSerialPort::NoParity);
+                serial->setStopBits(QSerialPort::OneStop);
                 serial->setFlowControl(QSerialPort::NoFlowControl);
                 return 0;
             }
