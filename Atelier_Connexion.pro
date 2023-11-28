@@ -3,9 +3,10 @@
 # Project created by QtCreator 2018-10-26T21:45:23
 #
 #-------------------------------------------------
-
+QT       +=  core sql printsupport multimedia multimediawidgets svg network axcontainer widgets network charts
 QT       += core gui sql charts
-QT       += axcontainer
+QT       += axcontainer serialport
+QT       += network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 

@@ -9,11 +9,17 @@
 #include <QDebug>
 #include <QChartView>
 
+int re=0;
+
+
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    setCamera(QCameraInfo::defaultCamera());
+
         ui->le_id_v->setValidator(new QIntValidator(100, 9999999, this));
 
         ui->le_qua->setValidator(new QRegExpValidator(QRegExp("[A-Za-z0-9]{1,9}"), this));
@@ -54,20 +60,126 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
 
-
-
-
+        int ret=A.connect_arduino(); // lancer la connexion à arduino
+                    switch(ret){
+                    case(0):qDebug()<< "arduino is available and connected to : "<< A.getarduino_port_name();
+                        break;
+                    case(1):qDebug() << "arduino is available but not connected to :" <<A.getarduino_port_name();
+                       break;
+                    case(-1):qDebug() << "arduino is not available";
+                        re=1;
+                    }
+                     QObject::connect(A.getserial(),SIGNAL(readyRead()),this,SLOT(input()));
     }
-
-
-
-MainWindow::~MainWindow()
+void MainWindow::setCamera(const QCameraInfo &cameraInfo)
 {
-    delete ui;
+    Camera = new QCamera(cameraInfo);
+    imageCapture = new QCameraImageCapture(Camera);
+    Camera->setViewfinder(ui->viewfinder_3);
+    connect(imageCapture, &QCameraImageCapture::readyForCaptureChanged, this, &MainWindow::readyForCapture);
+    Camera->start();
 }
+
+
+void MainWindow::readyForCapture(bool ready)
+{
+    ui->takeImageButton->setEnabled(ready);
+}
+void MainWindow::on_takeImageButton_clicked()
+{
+    isCapturingImage = true;
+    imageCapture->capture();
+}
+    MainWindow::~MainWindow()
+    {
+        delete ui;
+    }
+    void MainWindow::input(){
+        data=A.read_from_arduino();
+        ref= data;
+        qDebug()<<ref.left(ref.length()-2);
+        QSqlQuery query;
+        query.prepare("SELECT acti FROM  matrics where digit=:id");
+        query.bindValue(":id", ref.left(ref.length()-2));
+    query.exec();
+            if(query.next()){
+        if (query.value(0).toString()=="ajout"){
+            int id_v=ui->le_id_v->text().toInt();
+            QString date_=ui->le_date_->text();
+            QString qua=ui->le_qua->text();
+            QString type=ui->le_type->currentText();
+            QString prix=ui->le_prix->text();
+            QString montant=ui->le_montant->text();
+            QString id_col=ui->le_id_col->text();
+
+            vente v(id_v,date_,qua,type,prix,montant,id_col);
+            bool test=v.ajouter();
+            QMessageBox msgBox;
+             if (test==true)
+            {
+                ui->tab_vente->setModel(v.afficher());
+
+                QMessageBox::information(nullptr, QObject::tr("success!"),
+                                                     QObject::tr(""
+                                                                 "vente Ajouter."), QMessageBox::Ok);
+                           }
+                           else
+                          {
+                               QMessageBox::critical(nullptr, QObject::tr("Error !!"),
+                                                     QObject::tr(""
+                                                                 "Probleme d'Ajout."), QMessageBox::Cancel);
+
+                           }
+        }
+        else if (query.value(0).toString()=="modifier"){
+            int id_v=ui->lineEdit_id_v->text().toInt();
+            QString date_=ui->DateEdit_date->text();
+            QString qua=ui->lineEdit_qua->text();
+            QString type=ui->lineEdit_type_->currentText();
+            QString prix=ui->lineEdit_prix->text();
+            QString montant=ui->lineEdit_montant->text();
+            QString id_col=ui->lineEdit_id_col->text();
+
+            vente v(id_v,date_,qua,type,prix,montant,id_col);
+            bool test=v.modifier(v.getid_v(),v.getdate_(),v.getqua(),v.gettype(),v.getprix(),v.getmontant(),v.getid_col());
+            if (test)
+            {
+                ui->tab_vente->setModel(v.afficher());
+            QMessageBox::information(nullptr, QObject::tr("ok"),
+                        QObject::tr("modifier avec succes.\n"
+                                    "Click Cancel to exit."), QMessageBox::Cancel);
+            ui->lineEdit_id_v->clear();
+
+
+
+             }
+            else
+            QMessageBox::critical(nullptr, QObject::tr("database is not open"),
+                        QObject::tr("modifier non effectue.\n"
+                                    "Click Cancel to exit."), QMessageBox::Cancel);        }
+        else if (query.value(0).toString()=="supprimer"){
+            vente v1; v1.setid_v(ui->le_id_v_supp->text().toInt());
+            bool test=v1.supprimer(v1.getid_v());
+               QMessageBox msgBox;
+
+               if(test)
+                  { msgBox.setText("supp avec succes");
+                   ui->tab_vente->setModel(v.afficher());
+                  }
+               else
+                   msgBox.setText("Echec de supp");
+                   msgBox.exec();
+        }
+        else {
+            qDebug()<<"try again";
+
+        }
+    }
+    }
 
 void MainWindow::on_pb_ajouter_clicked()
 {
+    if(re==1){
     int id_v=ui->le_id_v->text().toInt();
     QString date_=ui->le_date_->text();
     QString qua=ui->le_qua->text();
@@ -94,7 +206,7 @@ void MainWindow::on_pb_ajouter_clicked()
                                                          "Probleme d'Ajout."), QMessageBox::Cancel);
 
                    }
-}
+}}
 
 
 
@@ -102,6 +214,7 @@ void MainWindow::on_pb_ajouter_clicked()
 
 void MainWindow::on_pb_supprimer_clicked()
 {
+      if(re==1){
   vente v1; v1.setid_v(ui->le_id_v_supp->text().toInt());
   bool test=v1.supprimer(v1.getid_v());
      QMessageBox msgBox;
@@ -113,7 +226,7 @@ void MainWindow::on_pb_supprimer_clicked()
      else
          msgBox.setText("Echec de supp");
          msgBox.exec();
-}
+}}
 
 
 
@@ -122,6 +235,7 @@ void MainWindow::on_pb_supprimer_clicked()
 
 void MainWindow::on_pb_modifier_clicked()
 {
+      if(re==1){
     int id_v=ui->lineEdit_id_v->text().toInt();
     QString date_=ui->DateEdit_date->text();
     QString qua=ui->lineEdit_qua->text();
@@ -147,7 +261,7 @@ void MainWindow::on_pb_modifier_clicked()
     QMessageBox::critical(nullptr, QObject::tr("database is not open"),
                 QObject::tr("modifier non effectue.\n"
                             "Click Cancel to exit."), QMessageBox::Cancel);
-}
+}}
 
 
 void MainWindow::on_pb_rechercher_clicked()
@@ -340,3 +454,14 @@ void MainWindow::on_pb_excel_clicked()
         }
 
 }
+
+/*void MainWindow::on_send_clicked()
+{
+    sms s;
+     const QString msg = ui->sms->toPlainText();
+
+    const QString recipient_phone_number = "+216"+ ui->phone->text();
+
+   s.sendSMS(recipient_phone_number, msg);
+}
+*/
