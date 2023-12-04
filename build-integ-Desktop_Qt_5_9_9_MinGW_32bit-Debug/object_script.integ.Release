@@ -1,0 +1,13 @@
+INPUT(
+./release\connection.o
+./release\main.o
+./release\mainwindow.o
+./release\dechets.o
+./release\smtp.o
+./release\collecte.o
+./release\vente.o
+./release\conteneur.o
+./release\qrc_resources.o
+./release\moc_mainwindow.o
+./release\moc_smtp.o
+);

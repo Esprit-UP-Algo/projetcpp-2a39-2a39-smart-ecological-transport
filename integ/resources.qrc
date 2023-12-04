@@ -1,0 +1,24 @@
+<RCC>
+    <qresource prefix="/img">
+        <file>img/final.png</file>
+        <file>img/chercher.png</file>
+        <file>img/sort.png</file>
+    </qresource>
+    <qresource prefix="/"/>
+    <qresource prefix="/fonts"/>
+    <qresource prefix="/icons">
+        <file>icons/reservation.png</file>
+        <file>icons/reservation1.png</file>
+        <file>icons/info.png</file>
+        <file>icons/info1.png</file>
+        <file>icons/history.png</file>
+        <file>icons/history1.png</file>
+        <file>icons/container1.png</file>
+        <file>icons/container.png</file>
+        <file>icons/hand.png</file>
+        <file>icons/bin.png</file>
+        <file>icons/hand1.png</file>
+        <file>icons/bin1.png</file>
+        <file>icons/logo.png</file>
+    </qresource>
+</RCC>
